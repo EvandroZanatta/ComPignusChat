@@ -26,26 +26,37 @@
     </body>
 
     <script>
-      var socket = io();
-      
-      var person = prompt("Por favor escolha seu nick!", "");
-        if (person != null) {
-            socket.emit('new user', person);
-            socket.emit('chat message', '<b>'+person+' se conectou ao chat</b>');
-        }else{
-            socket.emit('chat message', 'Um usuário anonimo se conectou ao chat');
-            person = 'Anonimo'
-        }
-      
-      
-      $('form').submit(function(){
-        socket.emit('chat message', '<b>'+person+': </b>'+$('#m').val());
+    var socket = io();
+    
+    var person = prompt("Por favor escolha seu nick!", "");
+    if (person != null) {
+        socket.emit('new user', person);
+        socket.emit('chat message', '<b>' + person + ' se conectou ao chat</b>');
+    } else {
+        socket.emit('chat message', 'Um usuário anonimo se conectou ao chat');
+        person = 'Anonimo'
+    }
+    
+    function sendNewMsg() {
+        socket.emit('chat message', '<b>' + person + ': </b>' + $('#m').val());
         $('#m').val('');
+    }
+    
+    $('form').submit(function() {
+        sendNewMsg();
         return false;
-      });
-      socket.on('chat message', function(msg){
+    });
+    socket.on('chat message', function(msg) {
         $('#messages').append($('<li>').html(msg));
-      });
+    });
+    
+    $('#m').keypress(function(e) {
+        if (e.which == 13) {
+            event.preventDefault();
+            sendNewMsg();
+        }
+    });
+    
     </script>
 
 </html>
