@@ -26,6 +26,14 @@
     </body>
 
     <script>
+    
+    function sendNewMsg() {
+        if($('#m').val().length > 0){
+            socket.emit('chat message', '<b>' + person + ': </b>' + $('#m').val());
+            $('#m').val('');
+        }
+    }
+    
     var socket = io();
     
     var person = prompt("Por favor escolha seu nick!", "");
@@ -35,11 +43,6 @@
     } else {
         socket.emit('chat message', 'Um usuário anonimo se conectou ao chat');
         person = 'Anonimo'
-    }
-    
-    function sendNewMsg() {
-        socket.emit('chat message', '<b>' + person + ': </b>' + $('#m').val());
-        $('#m').val('');
     }
     
     $('form').submit(function() {
