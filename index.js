@@ -16,22 +16,16 @@ io.on('connection', function(socket){
   
   socket.on('new user', function(msg){
     person = msg;
+    io.emit('online status', 'on,'+person)
   });
   
   socket.on('disconnect', function(){
     io.emit('chat message', '<b>'+person+' se desconectou!</b>');
+    io.emit('online status', 'off,'+person)
   });
   
     
 });
-
-/*
-io.on('connection', function(socket){
-  console.log('a user connected');
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
-});*/
 
 http.listen(process.env.PORT, function(){
   console.log('listening on *:'+process.env.PORT);

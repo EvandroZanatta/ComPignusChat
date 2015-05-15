@@ -11,6 +11,9 @@
             #messages { list-style-type: none; margin: 0; padding: 0; }
             #messages li { padding: 5px 10px; }
             #messages li:nth-child(odd) { background: #eee; }
+            #users{position: absolute; width: 30%; right: 0; top: 0; bottom: 35px; background-color: #D8F5FF; border-left: 1px solid #73DBFF; list-style: none; padding: 10px 0 0 5px;}
+            
+  
         </style>
         
         <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
@@ -20,6 +23,7 @@
 
     <body>
         <ul id="messages"></ul>
+        <ul id="users"></ul>
         <form action="">
             <input id="m" autocomplete="off" /><button>Enviar</button>
         </form>
@@ -49,8 +53,23 @@
         sendNewMsg();
         return false;
     });
+    
     socket.on('chat message', function(msg) {
-        $('#messages').append($('<li>').html(msg));
+        $('#messages').prepend($('<li>').html(msg));
+    });
+    
+    //To show which users are online
+    socket.on('online status', function(msg) {
+        
+        msg = msg.split(",");
+        status = msg[0];
+        person = msg[1];
+        
+        if(status == 'on'){
+            $('#users').prepend($('<li class="'+person+'">').html(person));
+        }else{
+            $('.'+person).remove();
+        }
     });
     
     $('#m').keypress(function(e) {
